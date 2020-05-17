@@ -1,0 +1,28 @@
+#include "DxLib.h"
+#include "Score.h"
+#include "main.h"
+
+// 変数定義
+int numberImage[10];
+
+VECTOR2 size;
+
+void NumberFirstInit()
+{
+	size = { 16, 16 };
+	//画像の読み込み
+	LoadDivGraph("image/number16pix1.png", 10, 10, 1, size.x, size.y, numberImage);
+}
+void NumberDraw(int x, int y, int score)
+{
+	DrawGraph(x + size.x, y, numberImage[0], true);
+
+	// ---------- パターン2
+	int i = 0;
+	while (score > 0)
+	{
+		DrawGraph(x - (size.x*i), y, numberImage[score % 10], true);
+		score /= 10;
+		i++;
+	}
+}
