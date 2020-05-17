@@ -1,10 +1,214 @@
-struct PLAYER {
-	double x, y;
-	double draw_x, draw_y;
-	int speed;
-	int shot_type;
-	int bomb;
-	int power;
-	int life;
-	double range;
-};
+#include <math.h >	
+#include "main.h"
+#include "player.h"
+#include "shot.h"
+#include "enemy.h"
+#include "bullet.h"
+#include "blast.h"
+#include "key.h"
+#include "effects.h"
+#include "Score.h"
+#include "DataSaveLoad.h"
+
+typedef enum {
+	GMODE_INIT,
+	GMODE_TITLE,
+	GMODE_GAME,
+	GMODE_OVER,
+	GMODE_CLEAR
+}GAME_MODE;
+
+GAME_MODE gameMode;
+
+// title
+int titleImage;
+int titlecnt;
+
+// bright
+int bright;		// 明るさ
+int changeMode;	// 0:ﾌｪｰﾄﾞしていない,1: ﾌｪｰﾄﾞ中
+
+int pause;
+
+// gameover
+int overImage;
+int overcnt;
+
+// hiscore
+int hiscore;
+
+
+// stage
+int stageLImage;
+int stageRImage;
+int backImage;
+
+CHARACTER bzero;	// 真ん中の背景
+CHARACTER bcMove;	// 一つ上の背景
+CHARACTER bcMove2;	// 一つ下の背景
+
+
+
+CHARACTER lstage;
+CHARACTER rstage;
+CHARACTER lstagemove;
+CHARACTER rstagemove;
+
+
+int  GameSystemInit(void);
+void GameInit(void);
+void GameMain(void);
+void GameDraw(void);
+void GameTitle(void);
+void GameOver(void);
+void BulletCtr(void);
+void PlayerCtr(void);
+void ShotCtr(void);
+void BlastCtr(void);
+void BlastCtr2(void);
+//void BlastCtr3(void);
+void BlastGenerator(xy pos);
+void SparkCtr(void);
+
+// ========== WinMain関数 
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
+	GameSystemInit();
+	GameInit();
+
+   // ---------- ｹﾞｰﾑﾙｰﾌﾟ  
+	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0) 
+	{
+		ClsDrawScreen();
+
+		KeyCheck();
+
+		switch (gameMode)
+		{
+		case GMODE_INIT:
+			GameInit();
+			break;
+		case GMODE_TITLE:
+			GameTitle();
+			break;
+		case GMODE_GAME:
+			GameMain();
+			break;
+		case GMODE_OVER:
+			GameOver();
+			break;
+		case GMODE_CLEAR:
+			break;
+		default:
+			break;
+		}
+		// ﾒｲﾝ処理 
+
+		ScreenFlip(); // 裏画面を表画面に瞬間ｺﾋﾟｰ  
+	}
+	DxLib_End(); // DXﾗｲﾌﾞﾗﾘの終了処理 
+	return 0;  // このﾌﾟﾛｸﾞﾗﾑの終了 
+}
+
+// ---------- グラフィックの登録 ----------- 
+int GameSystemInit(void)
+{
+	// ｼｽﾃﾑ処理  
+	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 16); // 640×480ﾄﾞｯﾄ65536色ﾓｰﾄﾞに設定  
+	ChangeWindowMode(true);     // true:window false:ﾌﾙｽｸﾘｰﾝ  
+	SetWindowText("SPACE_TRAVELER");
+
+	// DXﾗｲﾌﾞﾗﾘ初期化処理 
+	if (DxLib_Init() == -1)
+	{
+		return -1;
+	}
+
+	SetDrawScreen(DX_SCREEN_BACK);  // ひとまずﾊﾞｯｸﾊﾞｯﾌｧに描画 
+
+
+	// title
+	titleImage = LoadGraph("image/title.png");
+
+	// over
+	overImage = LoadGraph("image/GameOver.png");
+
+	// spark
+	ChargeEffectSystemInit();
+
+	// player
+	PlayerSystemInit();
+
+	// shot
+	ShotSystemInit();
+
+	// enemy(2ｺﾏ)
+	EnemySystemInit();
+
+	// bullet(2ｺﾏ)
+	BulletSystemInit();
+
+	// blast
+	BlastSystemInit();
+
+	//number 
+	NumberFirstInit();
+
+	// hiscore 
+	hiscore = 0;
+	HighScoreSaveB();
+
+	// back
+	backImage = LoadGraph("image/haikei2.png");
+
+	gameMode = GMODE_INIT;	// INITへ行く
+}
+
+
+// ----------- 変数初期化 ----------
+void GameInit(void)
+{
+	if (hiscore < player.score)
+	{
+		hiscore = player.score;
+		HighScoreSaveB();
+	}
+
+	// title
+	titlecnt = 0;
+
+	// bright 
+	bright = 255;
+	pause = 0;
+
+	// over
+	overcnt = 0;
+
+	// スクロール座標
+	bzero.pos.x = 0;
+	bzero.pos.y = 0;
+	bcMove.pos.x = 0;
+	bcMove.pos.y = -600;
+	bcMove2.pos.x = 0;
+	bcMove2.pos.y = 600;
+
+	// spark
+	ChargeEffectInit();
+
+	// player 
+	PlayerInit();
+
+	// shot
+	ShotInit();
+
+	// enemy 
+	EnemyInit();
+	
+	// bullet
+	BulletInit();
+
+	// blast
+	BlastInit();
+
+	gameMode = GMODE_TITLE;	// TITLEへ行く
+}
