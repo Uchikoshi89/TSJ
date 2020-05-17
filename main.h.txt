@@ -1,0 +1,61 @@
+#pragma once
+#include "Dxlib.h" 
+#include <math.h >	
+
+#define PI 3.141592
+
+#define SCREEN_SIZE_X 800
+#define SCREEN_SIZE_Y 600
+
+#define SCREEN_BASE 0
+ 
+#define SCROLL_SPEED 2
+
+#define SHOT_MAX 100
+
+#define LASER_MAX 4
+
+#define LASER_LENGTH 20
+
+#define ENEMY_SIZE_X 96
+#define ENEMY_SIZE_Y 96
+
+#define PLAYER_SIZE_X 48
+#define PLAYER_SIZE_Y 48
+
+#define BULLET_MAX 1000
+
+#define BLAST_MAX 24
+
+extern int hiscore;
+
+typedef struct
+{
+	int x;
+	int y;
+}xy;
+
+// ---------- \‘¢‘Ì‚ÌéŒ¾
+struct VECTOR2
+{
+	float x;
+	float y;
+};
+
+typedef struct
+{
+	int cnt;		// ¶³İÀ°
+	int movcnt;
+	int movMode;
+	int score;
+	int enemyBulletCnt;
+	int flag;		// ó‘ÔÌ×¸Ş
+	float speed;	// ˆÚ“®½Ëß°ÄŞ
+	float acc;		// ‰Á‘¬
+	int degree;		// Šp“x
+	double angle;	// Šp“x(×¼Ş±İ)
+	xy mov;			// ˆÚ“®—Ê
+	xy pos;
+	xy size;
+
+}CHARACTER;
