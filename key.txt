@@ -1,0 +1,48 @@
+#include "main.h"
+#include "key.h"
+
+
+bool newkey[KEY_MAX];
+bool trgkey[KEY_MAX];
+bool upkey[KEY_MAX];
+bool oldkey[KEY_MAX];
+
+void KeyCheck(void)
+{
+	// ‰‚ß‚Ì€”õ
+	for (int i = 0; i < KEY_MAX; i++) 
+	{
+		newkey[i] = false;		// ‘S•”‰Ÿ‚µ‚Ä‚¢‚È‚¢‚±‚Æ‚É‚·‚é
+		trgkey[i] = false;
+		upkey[i] = false;
+		
+	}
+
+	if (CheckHitKey(KEY_INPUT_W)) newkey[P1_UP] = true;
+	if (CheckHitKey(KEY_INPUT_D)) newkey[P1_RIGHT] = true;
+	if (CheckHitKey(KEY_INPUT_S)) newkey[P1_DOWN] = true;
+	if (CheckHitKey(KEY_INPUT_A)) newkey[P1_LEFT] = true;
+	if (CheckHitKey(KEY_INPUT_LCONTROL)) newkey[P1_SHOT] = true;
+	if (CheckHitKey(KEY_INPUT_Z)) newkey[P1_SHOT2] = true;
+	if (CheckHitKey(KEY_INPUT_SPACE)) newkey[P1_CENTER] = true;
+	if (CheckHitKey(KEY_INPUT_F)) newkey[P1_PAUSE] = true;
+
+	if (CheckHitKey(KEY_INPUT_UP)) newkey[P2_UP] = true;
+	if (CheckHitKey(KEY_INPUT_RIGHT)) newkey[P2_RIGHT] = true;
+	if (CheckHitKey(KEY_INPUT_DOWN)) newkey[P2_DOWN] = true;
+	if (CheckHitKey(KEY_INPUT_LEFT)) newkey[P2_LEFT] = true;
+	if (CheckHitKey(KEY_INPUT_RCONTROL)) newkey[P2_SHOT] = true;
+	if (CheckHitKey(KEY_INPUT_G)) newkey[P2_PAUSE] = true;
+
+	for (int i = 0; i < KEY_MAX; i++)
+	{
+		trgkey[i] = newkey[i] & ~oldkey[i];	// trgkey
+		upkey[i] = ~newkey[i] & oldkey[i];	// upkey
+		oldkey[i] = newkey[i];		// upkey
+	}
+}
+
+
+
+
+
