@@ -1,0 +1,92 @@
+#include"main.h"
+#include "player.h"
+#include "key.h"
+#include "shot.h"
+#include "effects.h"
+
+// •Ï”éŒ¾
+int playerImage;
+int playerLife;
+CHARACTER player;
+int playerHitFlag;
+
+int optionImage;
+CHARACTER option[2];
+int optioncnt[2];
+
+
+void PlayerSystemInit()
+{
+	playerImage = LoadGraph("image/hikouki.png");
+   	optionImage = LoadGraph("eximage/option.png");
+}
+
+void PlayerInit()
+{
+	player.flag = 0;
+	playerLife = 10;
+	player.size = { 48,48 };
+	player.pos.x = SCREEN_SIZE_X / 2;
+	player.pos.y = SCREEN_SIZE_Y - player.size.y;
+	player.speed = 10;
+	player.mov = { 0,0 };
+	playerHitFlag = 0;
+	player.score = 0;
+
+	option[2].flag = 0;
+	optioncnt[0] = 0;
+	option[0].pos.x = player.pos.x - 60;
+	option[0].pos.y = player.pos.y;
+	optioncnt[1] = 0;
+	option[1].pos.x = player.pos.x + 60;
+	option[1].pos.y = player.pos.y;
+
+}
+
+void PlayerUpData()
+{
+	player.mov = { 0, 0 };
+	if (newkey[P1_UP]) player.mov.y = -1.0f;
+	if (newkey[P1_RIGHT]) player.mov.x = 1.0f;
+	if (newkey[P1_DOWN]) player.mov.y = 1.0f;
+	if (newkey[P1_LEFT]) player.mov.x = -1.0f;
+	player.pos.x += player.mov.x * player.speed;
+	player.pos.y += player.mov.y * player.speed;
+
+	optioncnt[0] +=5;
+	option[0].pos.x = player.pos.x - 40;
+	option[0].pos.x = player.pos.x + cos((PI / 180)*optioncnt[0]) * 100;
+	option[0].pos.y = player.pos.y + sin((PI / 180)*optioncnt[0])* 100;
+	
+
+	optioncnt[1] -=5;
+	option[1].pos.x = player.pos.x + 40;
+	option[1].pos.x = player.pos.x + cos((PI / 180)*optioncnt[1]) * -100;
+	option[1].pos.y = player.pos.y + sin((PI / 180)*optioncnt[1]) * 100;
+
+	if (newkey[P1_SHOT]) {
+		ChargeEffectGenerator(&player);
+	}
+
+	if (player.pos.x >= SCREEN_SIZE_X - player.size.x / 2)
+	{
+		player.pos.x = SCREEN_SIZE_X - player.size.x / 2;
+	}
+
+	if (player.pos.x <= SCREEN_BASE + player.size.x / 2)
+	{
+		player.pos.x = SCREEN_BASE + player.size.x / 2;
+	}
+
+	if (player.pos.y >= SCREEN_SIZE_Y - player.size.y / 2)
+	{
+		player.pos.y = SCREEN_SIZE_Y - player.size.y / 2;
+	}
+	
+	if (player.pos.y <= SCREEN_BASE + player.size.y / 2)
+	{
+		player.pos.y = SCREEN_BASE + player.size.y / 2;
+	}
+
+
+}
