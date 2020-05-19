@@ -1,0 +1,13 @@
+#pragma once
+
+// ¸ŞÛ°ÊŞÙ•Ï”
+extern CHARACTER player;
+extern int playerHitFlag;
+extern int playerLife;
+
+// ÌßÛÄÀ²ÌßéŒ¾
+void PlayerSystemInit(void);
+void PlayerInit(void);
+void PlayerUpData(void);
+void PlayerDraw(void);
+
