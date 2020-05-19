@@ -212,3 +212,82 @@ void GameInit(void)
 
 	gameMode = GMODE_TITLE;	// TITLEへ行く
 }
+
+void GameTitle(void)
+{
+	if (changeMode == 1)
+	{
+		bright -=4;		// 明るさを減らす
+		if (bright < 0) {
+			gameMode = GMODE_GAME;
+			bright = 0;
+		}
+	}
+	else {
+		bright = 255;	// 明るさを最大にする
+		if (trgkey[P1_CENTER]) {
+			changeMode = 1;		// ﾌｪｰﾄﾞを開始する
+		}
+	}
+
+	SetDrawBright(bright, bright, bright);
+
+	DrawGraph(SCREEN_SIZE_X / 2 - 360 / 2, 100, titleImage, true);	// ﾀｲﾄﾙ画面
+
+	titlecnt++;
+	if (titlecnt / 35 % 2 == 0) {
+		DrawString(400 - 8 * 6, 460, "PUSH_SPACE_KEY", 0xffffff);	// 文字の消滅
+	}
+	DrawString(0, 0, "TITLE", 0xffff00);
+}
+
+void GameMain(void)
+{
+	if(pause == 0){
+	if (changeMode == 1)
+	{
+		bright += 5;
+		if (bright > 255) {
+			bright = 255;
+			changeMode = 0;
+		}
+		SetDrawBright(bright, bright, bright);
+	}
+
+	else {
+		PlayerUpData();
+		ShotUpData();
+		BulletUpData();
+		BlastCtr();
+		BlastCtr2();
+	//	BlastCtr3();
+		ChargeEffectUpData();
+	}
+
+		GameDraw();
+	if ((trgkey[P1_PAUSE]) || (trgkey[P2_PAUSE]))
+		{
+		pause++;
+		pause = pause % 2;
+		}
+	}
+
+	for (int no = 0; no < 10; no++)
+	{
+		NumberDraw(800 - 32, 300, player.score);
+	}
+
+	NumberDraw(800-32, 0, hiscore);//ハイスコア
+
+
+	if (playerLife < 0)
+	{
+		gameMode = GMODE_OVER;
+	}
+	
+	if (playerLife < 0)
+	{
+		playerLife += 10;
+	}
+}
+
