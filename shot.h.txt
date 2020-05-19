@@ -1,0 +1,24 @@
+#pragma once
+
+// Way
+typedef struct {
+	int mode;
+	int count;
+	int delectcount;
+	CHARACTER shot[3];
+}WAY_BASE;
+
+
+// ¸ŞÛ°ÊŞÙ•Ï”
+extern CHARACTER shot[SHOT_MAX];
+
+extern int shotcnt;
+extern int shotTiming;
+
+
+// ÌßÛÄÀ²ÌßéŒ¾
+void ShotSystemInit(void);
+void ShotInit(void);
+void ShotUpData(void);
+void ShotDraw(void);
+void Way3Generator(CHARACTER base);
