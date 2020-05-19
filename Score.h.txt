@@ -1,0 +1,6 @@
+#pragma once
+#pragma once
+
+// 関数プロトタイプ宣言
+void NumberFirstInit();
+void NumberDraw(int, int, int);
