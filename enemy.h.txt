@@ -1,0 +1,14 @@
+#pragma once
+
+#define ENEMY_CNT_X 15
+
+extern CHARACTER enemy;
+extern int enemyBulletCnt;
+extern int enemyBulletTiming;
+
+void EnemySystemInit(void);
+void EnemyInit(void);
+void EnemyUpdata(void);
+void EnemyDraw(void);
+
+void EnemyMove(CHARACTER *e);
