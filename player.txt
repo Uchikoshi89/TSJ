@@ -10,10 +10,6 @@ int playerLife;
 CHARACTER player;
 int playerHitFlag;
 
-int optionImage;
-CHARACTER option[2];
-int optioncnt[2];
-
 
 void PlayerSystemInit()
 {
@@ -33,14 +29,6 @@ void PlayerInit()
 	playerHitFlag = 0;
 	player.score = 0;
 
-	option[2].flag = 0;
-	optioncnt[0] = 0;
-	option[0].pos.x = player.pos.x - 60;
-	option[0].pos.y = player.pos.y;
-	optioncnt[1] = 0;
-	option[1].pos.x = player.pos.x + 60;
-	option[1].pos.y = player.pos.y;
-
 }
 
 void PlayerUpData()
@@ -52,17 +40,6 @@ void PlayerUpData()
 	if (newkey[P1_LEFT]) player.mov.x = -1.0f;
 	player.pos.x += player.mov.x * player.speed;
 	player.pos.y += player.mov.y * player.speed;
-
-	optioncnt[0] +=5;
-	option[0].pos.x = player.pos.x - 40;
-	option[0].pos.x = player.pos.x + cos((PI / 180)*optioncnt[0]) * 100;
-	option[0].pos.y = player.pos.y + sin((PI / 180)*optioncnt[0])* 100;
-	
-
-	optioncnt[1] -=5;
-	option[1].pos.x = player.pos.x + 40;
-	option[1].pos.x = player.pos.x + cos((PI / 180)*optioncnt[1]) * -100;
-	option[1].pos.y = player.pos.y + sin((PI / 180)*optioncnt[1]) * 100;
 
 	if (newkey[P1_SHOT]) {
 		ChargeEffectGenerator(&player);
@@ -89,4 +66,23 @@ void PlayerUpData()
 	}
 
 
+}
+
+void PlayerDraw()
+{
+	if (playerHitFlag == 1)
+	{
+		SetDrawBright(255, 0, 0);		// ê‘Ç…æØƒ
+	}
+
+	DrawGraph(player.pos.x - player.size.x / 2,
+			  player.pos.y - player.size.y / 2, playerImage, true);
+			  SetDrawBright(255, 255, 255);
+
+
+	for (int i = 0; i < playerLife - 1; i++)
+	{
+		DrawGraph((740 - (i * 16)), 500,
+			playerImage, true);
+	}*/
 }
