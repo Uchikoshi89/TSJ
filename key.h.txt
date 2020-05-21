@@ -1,0 +1,33 @@
+#pragma
+
+enum KEY_MODE {
+	P1_UP,
+	P1_RIGHT,
+	P1_DOWN,
+	P1_LEFT,
+	P1_SHOT,
+	P1_SHOT2,
+	P1_CENTER,
+	P1_PAUSE,
+
+	P2_UP,
+	P2_RIGHT,
+	P2_DOWN,
+	P2_LEFT,
+	P2_SHOT,
+	P2_PAUSE,
+
+	KEY_MAX
+};
+
+// ----------∏ﬁ€∞ ﬁŸïœêî
+extern bool newkey[KEY_MAX];
+extern bool trgkey[KEY_MAX];
+extern bool upkey[KEY_MAX];
+extern bool oldkey[KEY_MAX];
+
+// Ãﬂ€ƒ¿≤ÃﬂêÈåæ	
+
+// key.cpp
+void KeyCheck(void);
+
