@@ -1,0 +1,9 @@
+#pragma once
+
+extern CHARACTER bullet[BULLET_MAX];
+extern int bulletMoveCnt[BULLET_MAX];
+
+void BulletSystemInit(void);
+void BulletInit(void);
+void BulletUpData(void);
+void BulletDraw(void);
