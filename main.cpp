@@ -291,3 +291,103 @@ void GameMain(void)
 	}
 }
 
+void GameDraw(void)
+{
+
+	int speed = 5;
+	
+	DrawString(0, 0, "MAIN", 0xffff00);
+
+	// ”wŒi•\Ž¦
+	DrawGraph(bzero.pos.x, bzero.pos.y, backImage, true);
+	DrawGraph(bcMove.pos.x, bcMove.pos.y, backImage, true);
+	DrawGraph(bcMove2.pos.x, bcMove2.pos.y, backImage, true);
+
+	bzero.pos.y += 5;
+	bcMove.pos.y += 5;
+	bcMove2.pos.y += 5;
+
+	//”wŒiƒXƒNƒ[ƒ‹•\Ž¦
+	if (bzero.pos.y >= SCREEN_SIZE_Y)	// YÀ•W‚ª‰æ–Ê‰º‚É‚¢‚Á‚½‚ç
+	{
+		bzero.pos.y = bcMove.pos.y - 600;	// ‰æ–Êã‚É‚à‚Á‚Ä‚­‚é
+	}
+
+	if (bcMove.pos.y >= 600) // YÀ•W‚ª0‚É‚¢‚Á‚½‚ç
+	{
+		bcMove.pos.y = bzero.pos.y -600;	// ˆê–‡–Ú‚Ìã‚É‚à‚Á‚Ä‚­‚é
+	}
+
+	if (bcMove2.pos.y >= 600)
+	{
+		if (bcMove.pos.y - 600)
+		{
+			bcMove2.pos.y = bzero.pos.y - 600;	// 
+		}
+	}
+
+	// spark
+	ChargeEffectDraw();
+
+	// player
+	PlayerDraw();
+
+	// shot
+	ShotDraw();
+
+	// enemy
+	EnemyDraw();
+
+	// bullet
+	BulletDraw();
+
+	// blast 
+	BlastDraw();
+	
+}
+
+void SparkCtr(void)
+{
+	ChargeEffectUpData();
+}
+
+
+void PlayerCtr(void)
+{
+	PlayerUpData();
+}
+
+void ShotCtr(void)
+{
+	ShotUpData();
+}
+
+void BulletCtr(void)
+{
+	BulletUpData();
+}
+
+void GameOver(void)
+{
+	if (trgkey[P1_CENTER])
+	{
+		if (hiscore < player.score)
+		{
+			hiscore = player.score;
+			HighScoreSaveB();
+		}
+			gameMode = GMODE_TITLE;	// TITLE‚Ös‚­
+	}
+
+	DrawGraph(SCREEN_SIZE_X / 2 - 430 / 2, 100, overImage, true);
+
+	overcnt++;
+	if (overcnt / 15 % 2 == 0) {
+		DrawString(400 - 8 * 6, 460, "PUSH_SPACE_KEY", 0xffffff);	// •¶Žš‚ÌÁ–Å
+	}
+	DrawString(0, 0, "GAMEOVER", 0xffff00);
+
+}
+
+
+}
