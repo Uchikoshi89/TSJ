@@ -272,6 +272,23 @@ void GameMain(void)
 		}
 	}
 
+	//for (int i = 10; score >= i; i*=10)
+	//{
+	//	numLen ++ ;
+	//}
+
+	//for (int i = 0; i < numLen; i++)
+	//{
+	//	if (score != 0) {	// ƒXƒRƒA‚ª0‚Å‚È‚¢ê‡
+	//		DrawGraph((780 - (i * 16)), 0, numberImage[score % 10 + 1], true);	// •`‰æ‚·‚é
+	//	}
+	//	else if (score == 0)
+	//	{
+	//		DrawGraph((780 - (i * 16)), 0, numberImage[score % 10 + 1], true);	// •`‰æ‚·‚é
+	//	}
+	//	score /=10;
+	//}
+
 	for (int no = 0; no < 10; no++)
 	{
 		NumberDraw(800 - 32, 300, player.score);
@@ -344,6 +361,8 @@ void GameDraw(void)
 	// blast 
 	BlastDraw();
 	
+
+
 }
 
 void SparkCtr(void)
@@ -390,4 +409,114 @@ void GameOver(void)
 }
 
 
+
+bool HitCheck(CHARACTER a, CHARACTER b)
+{
+	// “–‚½‚Á‚Ä‚¢‚½‚çtrue‚ð•Ô‚·
+		if ((a.pos.x - a.size.x / 2 <= b.pos.x + b.size.x / 2)
+		&&	(a.pos.x + a.size.x / 2 >= b.pos.x - b.size.x / 2)
+		&&	(a.pos.y - a.size.y / 2 <= b.pos.y + b.size.y / 2)
+		&&	(a.pos.y + a.size.y / 2 >= b.pos.y - b.size.y / 2)
+			) {
+			player.flag = 0;
+			//playerLife--;
+			return true;
+		}
+	return false;
+
+	
+
+	for (int i = 0; i < SHOT_MAX; i++) {
+		if ((enemy.flag == 1) && (shot[i].flag == 1)) {
+			// “–‚½‚Á‚Ä‚¢‚½‚çtrue‚ð•Ô‚·
+			if ((enemy.pos.x + enemy.size.x > shot[i].pos.x)
+				&& (enemy.pos.x < shot[i].pos.x + shot[i].size.x)
+				&& (enemy.pos.y + enemy.size.y > shot[i].pos.y)
+				&& (enemy.pos.y < shot[i].pos.y + shot[i].size.y)
+				) {
+				enemy.flag = 0;
+				shot[i].flag = 0;
+			}
+		}
+		return false;
+	}
+
+	/*
+	for (int i = 0; i < BULLET_MAX; i++) {
+		if ((option[1].flag == 1) && (bullet[i].flag == 1)) {
+			// “–‚½‚Á‚Ä‚¢‚½‚çtrue‚ð•Ô‚·
+			if ((option[2].pos.x + option[1].size.x  > bullet[i].pos.x)
+				&& (option[1].pos.x < bullet[i].pos.x + bullet[i].size.x)
+				&& (option[1].pos.y + option[1].size.y  > bullet[i].pos.y)
+				&& (option[1].pos.y < bullet[i].pos.y + bullet[i].size.y)
+				) {
+				option[1].flag = 0;
+				bullet[i].flag = 0;
+			}
+		}
+		return false;
+	}
+	*/
 }
+
+void BlastCtr(void)
+{
+	void BlastGenerator(xy pos);
+	//---------- “–‚½‚è”»’è
+	// “GvsÌßÚ²Ô°
+	int playerHitFlag = 0;
+	for (int i = 0; i < BULLET_MAX; i++) {
+		if (bullet[i].flag == 1) {
+			if ((HitCheck(player, bullet[i])) == true) {
+				// “–‚½‚Á‚½Žž‚Ìˆ—
+				BlastGenerator(player.pos);
+				playerHitFlag = 1;	// ÌßÚ²Ô°Ë¯ÄÌ×¸Þ
+				bullet[i].flag = 0;	// ’e‚ðÁ‚·
+			
+			}
+		}
+	}
+}
+
+void BlastCtr2(void)
+{
+	void BlastGenerator(xy pos);
+	//---------- “–‚½‚è”»’è
+	// “Gvs¼®¯Ä
+	int enemyHitFlag = 0;
+	for (int i = 0; i < SHOT_MAX; i++) {
+		if (shot[i].flag == 1) {
+			if ((HitCheck(enemy, shot[i])) == true) {
+				// “–‚½‚Á‚½Žž‚Ìˆ—
+				BlastGenerator(enemy.pos);
+				enemyHitFlag = 1;	// ÌßÚ²Ô°Ë¯ÄÌ×¸Þ
+				shot[i].flag = 0;	// ’e‚ðÁ‚·
+				player.score += 1;
+				hiscore = player.score;
+
+			}
+		}
+	}
+}
+
+/*
+void BlastCtr3(void)
+{
+	void BlastGenerator(xy pos);
+	//---------- “–‚½‚è”»’è
+	// “GvsµÌß¼®Ý
+	int optionHitFlag = 0;
+	for (int i = 0; i < BULLET_MAX; i++) {
+		if (bullet[i].flag == 1) {
+			if ((HitCheck(option[1], bullet[i])) == true) {
+				// “–‚½‚Á‚½Žž‚Ìˆ—
+				BlastGenerator(option[1].pos);
+				optionHitFlag = 1;	// ÌßÚ²Ô°Ë¯ÄÌ×¸Þ
+				bullet[i].flag = 0;	// ’e‚ðÁ‚·
+
+			}
+		}
+	}
+}
+
+*/
