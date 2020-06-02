@@ -1,0 +1,66 @@
+#include "main.h"
+#include "enemy.h"
+
+int enemyImage[2];
+CHARACTER enemy;
+int enemyBulletCnt;
+int enemyBulletTiming;
+
+void EnemySystemInit()
+{
+	LoadDivGraph("image/enemy1.png", 2, 2, 1, 96, 64, enemyImage);
+}
+void EnemyInit()
+{
+	enemy.pos.x = SCREEN_SIZE_X / 2;
+	enemy.pos.y = 200;
+	enemy.size = { 96,64 };
+	enemy.degree = 0;
+	enemy.cnt = 0;
+	enemy.mov.x = 0;
+	enemy.mov.y = 0;
+	enemyBulletCnt = 0;
+	enemyBulletTiming = 5;
+}
+
+void EnemyUpdata()
+{
+	// 敵移動
+	enemy.movcnt++;
+	EnemyMove(&enemy);
+	enemy.cnt++;
+}
+
+void EnemyDraw()
+{
+	enemy.cnt++;
+	DrawGraph(enemy.pos.x - enemy.size.x / 2,
+		enemy.pos.y - enemy.size.y / 2,
+		enemyImage[enemy.cnt /10 % 2], true);
+}
+
+
+void EnemyMove(CHARACTER *e)
+{
+	switch (e-> movMode) {
+	case 0:	// 落下
+		e->mov.y += 0.5f;
+		if (e->pos.y == 300) {	// Y座標が300になるまで落下
+			e->pos.y = 300;
+			e->movcnt = 0;		// 移動ｶｳﾝﾄ初期化 
+			e->movMode = 1;		// 移動ﾓｰﾄﾞを「停止」に
+			//e->enemyBulletCnt = 0;	// 弾発射ｶｳﾝﾄを初期化
+		}
+		break;
+	case 1:		// 停止
+			if (enemy.cnt == 200)
+			{
+				enemy.mov.y += 1;
+
+			}
+
+			// 座標更新
+			enemy.pos.x += enemy.mov.x;
+			enemy.pos.y += enemy.mov.y;
+	}
+}
