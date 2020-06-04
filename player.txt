@@ -4,7 +4,6 @@
 #include "shot.h"
 #include "effects.h"
 
-// •Ï”éŒ¾
 int playerImage;
 int playerLife;
 CHARACTER player;
