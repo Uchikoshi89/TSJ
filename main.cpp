@@ -24,9 +24,6 @@ GAME_MODE gameMode;
 int titleImage;
 int titlecnt;
 
-// bright
-int bright;		// –¾‚é‚³
-int changeMode;	// 0:Ìª°ÄÞ‚µ‚Ä‚¢‚È‚¢,1: Ìª°ÄÞ’†
 
 int pause;
 
