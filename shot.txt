@@ -1,0 +1,303 @@
+#include "main.h"
+#include "shot.h"
+#include "player.h"
+#include "key.h"
+
+int shotImage;
+CHARACTER shot[SHOT_MAX];
+int shotcnt;
+int shotTiming;
+
+LASER_BASE laser[2];
+
+int laserImage;
+
+WAY_BASE way3;
+
+
+void ShotSystemInit()
+{
+	shotImage = LoadGraph("image/tama.png");
+	laserImage = LoadGraph("image/laser.png");
+}
+
+void ShotInit()
+{
+
+	for (int i = 0; i < SHOT_MAX; i++)
+	{
+		shot[i].flag = 0;
+		shot[i].size = { 100,100 };
+		shot[i].speed = 10;
+	}
+	shotcnt = 0;	// î≠éÀÇ∑ÇÈ¿≤–›∏ﬁÇÃ∂≥›ƒ 
+	shotTiming = 3;	//  î≠éÀÇ∑ÇÈ¿≤–›∏ﬁ
+
+	// 3≥™≤ºÆØƒ
+	way3.mode = 0;
+	way3.count = 0;
+	way3.delectcount= 0;
+
+	for (int i = 0; i < 3; i++) {
+		way3.shot[i].flag = 0;
+		way3.shot[i].size = { 32,32 };
+		way3.shot[i].speed = 1;
+	}
+
+}
+
+
+void ShotUpData()
+{
+	if (newkey[P1_SHOT]) {
+		if (shotcnt > shotTiming) {			// î≠éÀ∂≥›ƒÇ™¿≤–›∏ﬁà»è„Ç…Ç»Ç¡ÇΩÇÁÅEÅE    
+			for (int i = 0; i < SHOT_MAX; i++) {
+				if (shot[i].flag == 0) {		// î≠éÀÇµÇƒÇ»Ç¢Ç‡ÇÃÇíTÇ∑      
+					shot[i].pos = player.pos;
+					shot[i].flag = 1;
+					shotcnt = 0;	 // î≠éÀ∂≥›ƒÇ0Ç©ÇÁÇ…Ç∑ÇÈ   
+					break;
+				}
+			}
+		}
+	}
+
+	// î≠éÀ∂≥›ƒÇ1êiÇﬂÇÈ 
+	shotcnt++;
+	for (int i = 0; i < SHOT_MAX; i++)
+	{
+		if (shot[i].flag != 1)continue;	// 1à»äOñ≥Çµ
+		shot[i].pos.y -= shot[i].speed;	// è„Ç…à⁄ìÆ
+										//	shot[i].acc += 0.03;			// â¡ë¨ó Çëùâ¡
+										//  shot[i].speed += shot[i].acc;
+										// âÊñ äOÇæÇ¡ÇΩÇÁè¡Ç∑
+		if (shot[i].pos.y < 0)
+		{
+			shot[i].flag = 0;	// è¡ñ≈
+		}
+	}
+
+	// ⁄∞ªﬁ∞
+
+	// î≠éÀ∑∞Ç™âüÇ≥ÇÍÇΩ
+	if (newkey[P2_SHOT]) {
+		if (laser[0].mode == 0) {
+			for (int i = 0; i < LASER_LENGTH; i++) {
+
+				laser[0].cnt = 0;
+				laser[0].DeletCnt = 0;
+				laser[0].flag[i] = 0;
+				laser[0].mode = 1;
+			}
+		}
+	}
+
+	if (newkey[P2_SHOT]) {
+		if (laser[1].mode == 0) {
+			for (int i = 0; i < LASER_LENGTH; i++) {
+
+				laser[1].cnt = 0;
+				laser[1].DeletCnt = 0;
+				laser[1].flag[i] = 0;
+				laser[1].mode = 1;
+			}
+		}
+	}
+
+	// î≠éÀíÜÇÃèàóù
+	if (laser[0].mode == 1)
+	{
+		if (laser[0].cnt < LASER_LENGTH) {
+			for (int i = 0; i < LASER_LENGTH; i++)
+			{
+				if (laser[0].flag[i] == 0)
+				{
+					laser[0].pos[i] = option[0].pos;
+					laser[0].cnt++;
+					laser[0].flag[i] = 1;
+					break;
+				}
+			}
+		}
+	}
+
+	if (laser[1].mode == 1)
+	{
+		if (laser[1].cnt < LASER_LENGTH) {
+			for (int i = 0; i < LASER_LENGTH; i++)
+			{
+				if (laser[1].flag[i] == 0)
+				{
+					laser[1].pos[i] = option[1].pos;
+					laser[1].cnt++;
+					laser[1].flag[i] = 1;
+					break;
+				}
+			}
+		}
+	}
+
+	// ⁄∞ªﬁ∞ÇÃà⁄ìÆÅïè¡ñ≈èàóù
+	for (int i = 0; i < LASER_LENGTH; i++) 
+	{
+		if (laser[0].flag[i] == 1)
+		{
+			laser[0].pos[i].y -= 10;
+			laser[0].pos[i].x = option[0].pos.x;
+			if (laser[1].pos[i].y < 0)
+			{
+				laser[0].flag[i] = 0;
+				laser[0].DeletCnt++;
+			}
+		}
+	}
+
+	for (int i = 0; i < LASER_LENGTH; i++)
+	{
+		if (laser[1].flag[i] == 1)
+		{
+			laser[1].pos[i].y -= 10;
+			laser[1].pos[i].x = option[1].pos.x;
+			if (laser[1].pos[i].y < 0)
+			{
+				laser[1].flag[i] = 0;
+				laser[1].DeletCnt++;
+			}
+		}
+	}
+
+
+	// ⁄∞ªﬁ∞Ç™ëSÇƒÇ»Ç≠Ç»ÇÈèàóù
+	if(laser[0].mode == 1){
+		if (laser[0].cnt == laser[0].DeletCnt) {
+			laser[0].mode = 0;
+		}
+	}
+
+	if (laser[1].mode == 1) {
+		if (laser[1].cnt == laser[1].DeletCnt) {
+			laser[1].mode = 0;
+		}
+	}
+}
+
+void ShotDraw()
+{
+	for (int i = 0; i < SHOT_MAX; i++)
+	{
+		if (shot[i].flag == 1)	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇï`âÊÇ∑ÇÈ  
+		{
+			DrawGraph(shot[i].pos.x - shot[i].size.x / 2,
+					  shot[i].pos.y - shot[i].size.y / 2, shotImage, true);
+		}
+	}
+
+
+// ⁄∞ªﬁ∞
+	if (laser[0].mode == 1)
+	{
+		for (int i = 0; i < LASER_LENGTH; i++)
+		{
+			if (laser[0].flag[i] == 0)	continue;// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇï`âÊÇ∑ÇÈ  
+			{
+				DrawGraph(laser[0].pos[i].x - laser[0].size[i].x / 2,
+						  laser[0].pos[i].y - laser[0].size[i].y / 2,
+						  laserImage, true);
+			}
+		}
+	}
+
+	if (laser[1].mode == 1)
+	{
+		for (int i = 0; i < LASER_LENGTH; i++)
+		{
+			if (laser[1].flag[i] == 0)	continue;// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇï`âÊÇ∑ÇÈ  
+			{
+				DrawGraph(laser[1].pos[i].x - laser[1].size[i].x / 2,
+						  laser[1].pos[i].y - laser[1].size[i].y / 2,
+						  laserImage, true);
+			}
+		}
+	}
+
+}
+
+void LaserGenerator(xy* parent)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		if (laser[i].mode != 0)continue;
+		laser[i].ParentPos = parent;
+		laser[i].mode = 1;
+		laser[i].cnt = 1;
+		laser[i].DeletCnt = 1;
+	}
+}
+
+
+void Way3Generator(CHARACTER base)
+{
+	if (way3.mode != 0)return;
+
+	way3.shot[0].angle = (PI / 180) * 260;
+	way3.shot[1].angle = (PI / 180) * 270;
+	way3.shot[2].angle = (PI / 180) * 280;
+
+	for (int i = 0; i < 3; i++)
+	{
+		way3.shot[i].flag = 1;
+		way3.shot[i].pos = base.pos;
+		way3.shot[i].acc = 0;
+		way3.shot[i].speed = 2;
+	}
+
+	way3.mode = 1;
+	way3.count = 0;
+	way3.delectcount = 0;
+
+	if (way3.mode == 1)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			if (way3.shot[i].flag == 1) {
+				way3.shot[i].mov.x = cos(way3.shot[i].angle)*way3.shot[i].speed;
+				way3.shot[i].mov.x = sin(way3.shot[i].angle)*way3.shot[i].speed;
+				way3.shot[i].pos.x += way3.shot[i].mov.x;
+				way3.shot[i].pos.y += way3.shot[i].mov.y;
+
+			}
+			if (way3.shot[i].pos.y < -32) {
+				way3.shot[i].flag = 0;
+				way3.delectcount++;
+			}
+		}
+		if (way3.delectcount == 3)
+		{
+			way3.mode = 0;
+		}
+	}
+
+	if (newkey[P1_SHOT2]) {
+		if (way3.mode == 0) {
+			for (int i = 0; i < 3; i++) {
+
+				way3.shot[i].cnt = 0;
+				way3.shot[i].pos = player.pos;
+				way3.delectcount = 0;
+				way3.shot[i].flag = 0;
+				way3.mode = 1;
+			}
+		}
+	}
+
+	if (way3.mode == 1)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			if (way3.shot[i].flag == 0)continue; {
+				DrawGraph(shot[i].pos.x - shot[i].size.x / 2,
+					shot[i].pos.y - shot[i].size.y / 2, shotImage, true);
+			}
+		}
+	}
+}
