@@ -49,7 +49,7 @@ void BulletUpData()
 
 				if (bullet[i].flag == 0) {
 					bullet[i].pos = enemy.pos;	// ”­ŽËˆÊ’u
-												// ÌßÚ²Ô°‚ÉŒü‚¯‚Ä”­ŽË
+												
 					bullet[i].angle = atan2(player.pos.y - enemy.pos.y,
 											player.pos.x - enemy.pos.x);
 					bullet[i].mov.x = cos(bullet[i].angle) * bullet[i].speed;
